@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import Home from './pages/Home';
 import Products from './pages/Products';
 import Cart from "./pages/Cart";
@@ -17,12 +16,12 @@ const router = createBrowserRouter([
   {
     path: "/products",
     element: <Products />,
-    children: [
-      // {
-      //   path: "products",
-      //   element: <Products />,
-      // },
-    ],
+    // children: [
+    //   {
+    //     path: "products",
+    //     element: <Navbar />,
+    //   },
+    // ],
   },
   {
     path: "/cart",

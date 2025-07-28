@@ -1,5 +1,6 @@
 import Cart from "./Cart";
 import React, { useEffect, useState } from "react";
+import Navbar from "../components/Navbar"
 
 function handleCartItem(product) {
   let cart = JSON.parse(window.localStorage.getItem("cart")) || [];
@@ -54,7 +55,8 @@ function Products() {
 
   return (
     <>
-      <h1 className="dark:text-gray-800 text-6xl font-semibold m-6">
+    <Navbar />,
+      <h1 className="dark:text-gray-800 text-6xl font-semibold m-6  mt-16">
         Products
       </h1>
 
@@ -107,7 +109,7 @@ function Products() {
       </div>
 
       <div className="mt-8">
-        <Cart isUpdated={isUpdated} onRemove={handleRemove} />
+        {/* <Cart isUpdated={isUpdated} onRemove={handleRemove} /> */}
       </div>
     </>
   );

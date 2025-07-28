@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar"
 
 function Cart({ isUpdated, onRemove }) {
   const [items, setItems] = useState([]);
@@ -14,7 +15,9 @@ function Cart({ isUpdated, onRemove }) {
   );
 
   return (
-    <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-6 shadow">
+    <>
+      <Navbar />,
+    <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-6 shadow mt-16">
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
         🛒 Cart
       </h2>
@@ -72,6 +75,7 @@ function Cart({ isUpdated, onRemove }) {
         </>
       )}
     </div>
+    </>
   );
 }
 

@@ -1,7 +1,9 @@
 import React from "react";
+import Navbar from "../components/Navbar";
 function Home() {
   return (
     <div>
+      <Navbar/>
       <div class="bg-[url('././landingimg.png')] bg-cover bg-center h-screen">
         <div class="flex justify-center ">
           <div class="text-white text-6xl font-semibold ">
