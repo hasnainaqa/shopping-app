@@ -1,18 +1,28 @@
 import Navbar from "../components/Navbar";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 
 function Checkout() {
+const cart = useSelector((state)=>state.tasks.cart)
+
+
+
+  function handleCartItem() {
+    localStorage.clear()
+    }
+  
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const cartItems = JSON.parse(window.localStorage.getItem("cart")) || [];
-    setItems(cartItems);
+    setItems(cart);
   }, []);
 
-  const total = items.reduce(
+  const total = (items || []).reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+  
 
   return (
     <>
@@ -139,6 +149,7 @@ function Checkout() {
         </div>
 
         <button
+        onClick={() => { handleCartItem() }}
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
         >

@@ -1,37 +1,42 @@
-import Cart from "./Cart";
 import React, { useEffect, useState } from "react";
+import Cart from "./Cart";
 import Navbar from "../components/Navbar";
-
-
+import { useSelector, useDispatch } from "react-redux";
 
 function Products() {
-  const [isUpdated, setIsUpdated] = useState(false);
+  const store = useSelector((val) => val);
+  console.log("store", store);
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const cart = useSelector((state) => state.tasks.cart);
+  const dispatch = useDispatch();
 
   function handleCartItem(product) {
-    let cart = JSON.parse(window.localStorage.getItem("cart")) || [];
     const existingItem = cart.find((item) => item.id === product.id);
 
     if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        quantity: 1,
+      dispatch({
+        type: "INCREASE_QUANTITY",
+        payload: product.id,
       });
+    } else {
+      dispatch({
+        type: "ADD_PRODUCT",
+        payload: {
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+          quantity: 1,
+        },
+      });
+      alert("Added to cart!");
     }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
-    setIsUpdated((prev) => !prev);
   }
-  
+
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
       .then((response) => {
@@ -53,15 +58,15 @@ function Products() {
 
   return (
     <>
-      <Navbar />,
+      <Navbar />
       <h1 className="dark:text-gray-800 text-6xl font-semibold m-6  mt-16">
         Product List :
       </h1>
       <div className="flex flex-wrap justify-center ">
-      {products.map((product) => (
+        {products.map((product) => (
           <div
-          className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-white rounded-lg shadow-sm bg-gray-600 m-4"
-          key={product.id}
+            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-white rounded-lg shadow-sm bg-gray-600 m-4"
+            key={product.id}
           >
             <a href={product.image}>
               <img
@@ -80,7 +85,6 @@ function Products() {
               <button
                 onClick={() => {
                   handleCartItem(product);
-                  setIsUpdated((prev) => !prev);
                 }}
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-700 rounded-lg hover:bg-gray-800"
               >

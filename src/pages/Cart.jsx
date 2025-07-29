@@ -1,24 +1,31 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
 
 function Cart() {
   const [isUpdated, setIsUpdated] = useState(false);
   const [items, setItems] = useState([]);
 
+  const cart = useSelector((state) => state.tasks.cart);
+  const dispatch = useDispatch();
 
   const onRemove = (item) => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart = cart.filter((items) => items.id !== item.id);
-    localStorage.setItem("cart", JSON.stringify(cart));
+    // console.log("cart", cart);
+    const updatedCart = cart.filter((items) => items.id !== item.id);
+    dispatch({
+      type: "REMOVE_PRODUCT",
+      payload: item.id,
+    });
     setIsUpdated((prev) => !prev);
   };
 
   useEffect(() => {
-    const cartItems = JSON.parse(window.localStorage.getItem("cart")) || [];
+    const cartItems = cart;
     setItems(cartItems);
-  }, [isUpdated]);
+  }, [isUpdated, cart]);
 
-  const total = items.reduce(
+  const total = (items || []).reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
@@ -62,7 +69,7 @@ function Cart() {
                     </div>
                   </div>
                   <button
-                    onClick={()=>onRemove(item)}
+                    onClick={() => onRemove(item)}
                     className="text-sm text-red-600 hover:text-red-800"
                   >
                     Remove
@@ -79,11 +86,11 @@ function Cart() {
                 ${total.toFixed(2)}
               </span>
             </div>
-              <a href="/checkout">
-            <button className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition">
-              Checkout
-            </button>
-            </a>
+            <Link to="/checkout">
+              <button className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition">
+                Checkout
+              </button>
+            </Link>
           </>
         )}
       </div>
