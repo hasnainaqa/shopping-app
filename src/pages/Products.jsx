@@ -1,25 +1,8 @@
 import Cart from "./Cart";
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar";
 
-function handleCartItem(product) {
-  let cart = JSON.parse(window.localStorage.getItem("cart")) || [];
-  const existingItem = cart.find((item) => item.id === product.id);
 
-  existingItem
-    ? (existingItem.quantity += 1)
-    : cart.push({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        quantity: 1,
-      });
-
- 
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("Added to cart!");
-}
 
 function Products() {
   const [isUpdated, setIsUpdated] = useState(false);
@@ -27,6 +10,28 @@ function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+  function handleCartItem(product) {
+    let cart = JSON.parse(window.localStorage.getItem("cart")) || [];
+    const existingItem = cart.find((item) => item.id === product.id);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Added to cart!");
+    setIsUpdated((prev) => !prev);
+  }
+  
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
       .then((response) => {
@@ -43,41 +48,33 @@ function Products() {
       });
   }, []);
 
-  const handleRemove = (id) => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart = cart.filter((item) => item.id !== id);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    setIsUpdated((prev) => !prev);
-  };
-
   if (loading) return <p>Loading products...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <>
-    <Navbar />,
+      <Navbar />,
       <h1 className="dark:text-gray-800 text-6xl font-semibold m-6  mt-16">
-        Products
+        Product List :
       </h1>
-
-      <div className="flex flex-wrap justify-center">
-        {products.map((product) => (
+      <div className="flex flex-wrap justify-center ">
+      {products.map((product) => (
           <div
-            className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm bg-gray-600 dark:border-gray-700 m-4"
-            key={product.id}
+          className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-white rounded-lg shadow-sm bg-gray-600 m-4"
+          key={product.id}
           >
             <a href={product.image}>
               <img
-                className="rounded-t-lg object-contain h-48 w-full"
+                className="rounded-t-lg object-contain h-48 w-full border border-gray-200 border-b-0"
                 src={product.image}
                 alt={product.title}
               />
             </a>
-            <div className="p-5">
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <div className="p-5 bg-gray-300  border-t-rounded-lg">
+              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 ">
                 {product.title}
               </h5>
-              <p className="mb-3 font-normal text-gray-700 dark:text-white h-24 overflow-hidden text-ellipsis">
+              <p className="mb-3 font-normal text-gray-700  h-24 overflow-hidden text-ellipsis">
                 {product.description}
               </p>
               <button
@@ -85,7 +82,7 @@ function Products() {
                   handleCartItem(product);
                   setIsUpdated((prev) => !prev);
                 }}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-700 rounded-lg hover:bg-gray-800"
               >
                 Buy now
                 <svg
@@ -107,9 +104,7 @@ function Products() {
           </div>
         ))}
       </div>
-
       <div className="mt-8">
-        {/* <Cart isUpdated={isUpdated} onRemove={handleRemove} /> */}
       </div>
     </>
   );
